@@ -1,34 +1,37 @@
 version: '3'
 
 services:
-  espocrm-db:
+  suitecrm-db:
     image: mariadb:10.5
-    container_name: espocrm-db
+    container_name: suitecrm-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: espocrm
-      MYSQL_USER: espouser
-      MYSQL_PASSWORD: espopass
+      MYSQL_DATABASE: suitecrm
+      MYSQL_USER: suiteuser
+      MYSQL_PASSWORD: suitepass
     volumes:
-      - espocrm-db-data:/var/lib/mysql
+      - suitecrm-db-data:/var/lib/mysql
 
-  espocrm-app:
-    image: espocrm/espocrm
-    container_name: espocrm-app
+  suitecrm-app:
+    image: bitnami/suitecrm:latest
+    container_name: suitecrm-app
     restart: always
     ports:
-      - "8080:80"
+      - "8090:8080"
     environment:
-      DATABASE_HOST: espocrm-db
-      DATABASE_NAME: espocrm
-      DATABASE_USER: espouser
-      DATABASE_PASSWORD: espopass
+      SUITECRM_DATABASE_HOST: suitecrm-db
+      SUITECRM_DATABASE_NAME: suitecrm
+      SUITECRM_DATABASE_USER: suiteuser
+      SUITECRM_DATABASE_PASSWORD: suitepass
+      SUITECRM_USERNAME: admin
+      SUITECRM_PASSWORD: admin123
+      ALLOW_EMPTY_PASSWORD: "yes"
     depends_on:
-      - espocrm-db
+      - suitecrm-db
     volumes:
-      - espocrm-data:/var/www/html
+      - suitecrm-data:/bitnami/suitecrm
 
 volumes:
-  espocrm-db-data:
-  espocrm-data:
+  suitecrm-db-data:
+  suitecrm-data:
