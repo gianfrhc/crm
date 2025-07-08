@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  suitecrm-db:
+    image: mariadb:10.5
+    container_name: suitecrm-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: suitecrm
+      MYSQL_USER: suiteuser
+      MYSQL_PASSWORD: suitepass
+    volumes:
+      - suitecrm-db-data:/var/lib/mysql
+
+  suitecrm-app:
+    image: bitnami/suitecrm:latest
+    container_name: suitecrm-app
+    restart: always
+    ports:
+      - "8090:8080"
+    environment:
+      SUITECRM_DATABASE_HOST: suitecrm-db
+      SUITECRM_DATABASE_NAME: suitecrm
+      SUITECRM_DATABASE_USER: suiteuser
+      SUITECRM_DATABASE_PASSWORD: suitepass
+      SUITECRM_USERNAME: admin
+      SUITECRM_PASSWORD: admin123
+      ALLOW_EMPTY_PASSWORD: "yes"
+    depends_on:
+      - suitecrm-db
+    volumes:
+      - suitecrm-data:/bitnami/suitecrm
+
+volumes:
+  suitecrm-db-data:
+  suitecrm-data:
